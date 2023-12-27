@@ -27,15 +27,15 @@
       <el-table-column prop="Grade.Name" label="年级" width sortable></el-table-column>-->
       <el-table-column label="年级" width sortable>
         <template scope="scope">{{
-          scope.row.Grade.EnrollmentYear + "级" + scope.row.Grade.Name
+          scope.row.Grade.EnrollmentYear + "年" + scope.row.Grade.Name + "级"
         }}</template>
       </el-table-column>
       <el-table-column prop="ClassNo" label="班级" width sortable></el-table-column>
-      <el-table-column prop="ClazzLevel" label="级组" width sortable></el-table-column>
-      <el-table-column prop="Manager" label="级长" width sortable></el-table-column>
-      <el-table-column prop="ClazzType" label="班类" width sortable></el-table-column>
+      <el-table-column prop="Department" label="系别" width sortable></el-table-column>
+      <el-table-column prop="DepManager" label="系主任" width sortable></el-table-column>
+      <el-table-column prop="Specialized" label="专业" width sortable></el-table-column>
       <el-table-column prop="TeacherCharge" label="班主任" width sortable></el-table-column>
-      <el-table-column prop="ChooseSub" label="选科" width sortable></el-table-column>
+      <el-table-column prop="Counsellor" label="辅导员" width sortable></el-table-column>
 
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -47,7 +47,7 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="nextPageClazz" :page-size="50" :total="total"
+      <el-pagination layout="prev, pager, next" @current-change="nextPageClazz" :page-size="10" :total="total"
         style="float: right"></el-pagination>
     </el-col>
 
@@ -62,21 +62,20 @@
             <el-option v-for="item in GradeTree" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="级组" prop="ClazzLevel">
-          <el-input v-model="addForm.ClazzLevel" auto-complete="off"></el-input>
+        <el-form-item label="系别" prop="Department">
+          <el-input v-model="addForm.Department" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="级长" prop="Manager">
-          <el-input v-model="addForm.Manager" auto-complete="off"></el-input>
+        <el-form-item label="系主任" prop="DepManager">
+          <el-input v-model="addForm.DepManager" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="班类" prop="ClazzType">
-          <el-input v-model="addForm.ClazzType" auto-complete="off"></el-input>
+        <el-form-item label="专业" prop="Specialized">
+          <el-input v-model="addForm.Specialized" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="TeacherCharge">
           <el-input v-model="addForm.TeacherCharge" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="选科" prop="ChooseSub">
-          <el-input v-model="addForm.ChooseSub" auto-complete="off"></el-input>
+        <el-form-item label="辅导员" prop="Counsellor">
+          <el-input v-model="addForm.Counsellor" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -96,21 +95,20 @@
             <el-option v-for="item in GradeTree" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="级组" prop="ClazzLevel">
-          <el-input v-model="editForm.ClazzLevel" auto-complete="off"></el-input>
+        <el-form-item label="系别" prop="Department">
+          <el-input v-model="editForm.Department" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="级长" prop="Manager">
-          <el-input v-model="editForm.Manager" auto-complete="off"></el-input>
+        <el-form-item label="系主任" prop="DepManager">
+          <el-input v-model="editForm.DepManager" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="班类" prop="ClazzType">
-          <el-input v-model="editForm.ClazzType" auto-complete="off"></el-input>
+        <el-form-item label="专业" prop="Specialized">
+          <el-input v-model="editForm.Specialized" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="TeacherCharge">
           <el-input v-model="editForm.TeacherCharge" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="选科" prop="ChooseSub">
-          <el-input v-model="editForm.ChooseSub" auto-complete="off"></el-input>
+        <el-form-item label="辅导员" prop="Counsellor">
+          <el-input v-model="editForm.Counsellor" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,49 +145,51 @@ export default {
       editLoading: false,
       editFormRules: {
         ClassNo: [{ required: true, message: "请输入班级名", trigger: "blur" }],
-        ClazzLevel: [
-          { required: true, message: "请输入级组", trigger: "blur" },
+        GradeId: [{ required: true, message: "请输入选择年级", trigger: "blur" }],
+        Department: [
+          { required: true, message: "请输入系别", trigger: "blur" },
         ],
-        Manager: [{ required: true, message: "请输入级长", trigger: "blur" }],
-        ClazzType: [{ required: true, message: "请输入班类", trigger: "blur" }],
+        DepManager: [{ required: true, message: "请输入系主任", trigger: "blur" }],
+        Specialized: [{ required: true, message: "请输入专业", trigger: "blur" }],
         TeacherCharge: [
           { required: true, message: "请输入班主任", trigger: "blur" },
         ],
-        ChooseSub: [{ required: true, message: "请输入选科", trigger: "blur" }],
+        Counsellor: [{ required: true, message: "请输入辅导员", trigger: "blur" }],
       },
       //编辑界面数据
       editForm: {
         Id: 0,
         ClassNo: "",
-        ClazzLevel: "",
-        Manager: "",
-        ClazzType: "",
+        Department: "",
+        DepManager: "",
+        Specialized: "",
         TeacherCharge: "",
-        ChooseSub: "",
+        Counsellor: "",
       },
       addFormVisible: false, //编辑界面是否显示
       addLoading: false,
       addFormRules: {
         ClassNo: [{ required: true, message: "请输入班级名", trigger: "blur" }],
-        ClazzLevel: [
-          { required: true, message: "请输入级组", trigger: "blur" },
+        GradeId: [{ required: true, message: "请输入选择年级", trigger: "blur" }],
+        Department: [
+          { required: true, message: "请输入系别", trigger: "blur" },
         ],
-        Manager: [{ required: true, message: "请输入级长", trigger: "blur" }],
-        ClazzType: [{ required: true, message: "请输入班类", trigger: "blur" }],
+        DepManager: [{ required: true, message: "请输入系主任", trigger: "blur" }],
+        Specialized: [{ required: true, message: "请输入专业", trigger: "blur" }],
         TeacherCharge: [
           { required: true, message: "请输入班主任", trigger: "blur" },
         ],
-        ChooseSub: [{ required: true, message: "请输入选科", trigger: "blur" }],
+        Counsellor: [{ required: true, message: "请输入辅导员", trigger: "blur" }],
       },
       //编辑界面数据
       addForm: {
         Id: 0,
         ClassNo: "",
-        ClazzLevel: "",
-        Manager: "",
-        ClazzType: "",
+        Department: "",
+        DepManager: "",
+        Specialized: "",
         TeacherCharge: "",
-        ChooseSub: "",
+        Counsellor: "",
       },
     };
   },

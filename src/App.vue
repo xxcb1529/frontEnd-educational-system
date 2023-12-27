@@ -184,9 +184,9 @@
                     {name: '前后端分离', type: ''},
                     {name: 'vue.js', type: ''},
                     {name: 'DDD领域驱动设计', type: 'success'},
-                    {name: '标签三', type: 'info'},
-                    {name: '欠费警告！', type: 'warning'},
-                    {name: '异常报告！', type: 'danger'}
+                    {name: 'NetCore 3.1', type: 'info'},
+                    {name: 'Element UI', type: 'warning'},
+                    {name: 'Mysql', type: 'danger'}
                 ],
                 visible: false,
                 top: 0,
@@ -267,7 +267,7 @@
             },
             //源码
             goGithub() {
-                window.open("https://github.com/anjoy8/学生成绩管理系统")
+                window.open("https://github.com/xxcb1529/frontEnd-educational-system")
             },
             //折叠导航栏
             collapse: function () {

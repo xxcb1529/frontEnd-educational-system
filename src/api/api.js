@@ -186,6 +186,9 @@ export const addRole = params => {
 export const getModuleListPage = params => {
     return axios.get(`${base}/api/module/get`, {params: params});
 };
+export const getTableTreeModuleListPage = params => {
+    return axios.get(`${base}/api/Module/GetAllParents`, {params: params});
+};
 export const removeModule = params => {
     return axios.delete(`${base}/api/module/delete`, {params: params});
 };
@@ -196,6 +199,10 @@ export const addModule = params => {
     return axios.post(`${base}/api/module/post`, params);
 };
 
+// 父级接口
+export const getMParent = params =>{
+    return  axios.get(`${base}/api/MParent/Get`, params);
+}
 
 // 菜单模块管理
 export const getPermissionListPage = params => {
@@ -224,6 +231,10 @@ export const getNavigationBar = params => {
     return axios.get(`${base}/api/permission/GetNavigationBar`, {params: params}).then(res => res.data);
 };
 
+export const GetPermissonTree = () => {
+    return axios.get(`${base}/api/Permission/GetPermissonTree`);
+};
+
 // Bug模块管理
 export const getBugListPage = params => {
     return axios.get(`${base}/api/TopicDetail/get`, {params: params});
@@ -237,7 +248,6 @@ export const editBug = params => {
 export const addBug = params => {
     return axios.post(`${base}/api/TopicDetail/post`, params);
 };
-
 
 
 // Grade
@@ -256,21 +266,21 @@ export const editGrade = params => {
 export const getGradeTree = params => {
     return axios.get(`${base}/api/Grade/GetGradeTree`, {params: params});
 };
-// Clazz
+// Class
 export const addClazz = params => {
-    return axios.post(`${base}/api/Clazz/post`, params);
+    return axios.post(`${base}/api/Class/post`, params);
 };
 export const getClazzListPage = params => {
-    return axios.get(`${base}/api/Clazz/get`, {params: params});
+    return axios.get(`${base}/api/Class/get`, {params: params});
 };
 export const removeClazz = params => {
-    return axios.delete(`${base}/api/Clazz/delete`, {params: params});
+    return axios.delete(`${base}/api/Class/delete`, {params: params});
 };
 export const editClazz = params => {
-    return axios.put(`${base}/api/Clazz/put`, params);
+    return axios.put(`${base}/api/Class/put`, params);
 };
-export const getClazzTree = params => {
-    return axios.get(`${base}/api/Clazz/GetClazzTree`, {params: params});
+export const getClassTree = params => {
+    return axios.get(`${base}/api/Class/GetClassTree`, {params: params});
 };
 // Course
 export const addCourse = params => {

@@ -12,6 +12,9 @@
         <el-form-item>
           <el-button type="primary" @click="addStudents">新增</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+        </el-form-item>
       </el-form>
     </el-col>
 
@@ -29,8 +32,8 @@
       <el-table-column prop="clazz.Name" label="班级" width sortable></el-table-column>
       <el-table-column prop="StudentNo" label="学号" width sortable></el-table-column>
       <el-table-column prop="Name" label="姓名" width sortable></el-table-column>
-      <el-table-column prop="SubjectA" label="学科一" width sortable></el-table-column>
-      <el-table-column prop="SubjectB" label="学科二" width sortable></el-table-column>
+      <el-table-column prop="ProDirection" label="专业方向" width sortable></el-table-column>
+      <el-table-column prop="CGPA" label="绩点" width sortable></el-table-column>
       <el-table-column prop="InSchoolSituation" label="在校情况" width sortable></el-table-column>
       <el-table-column prop="EnrollmentYear" label="入学年份" width sortable></el-table-column>
       <el-table-column prop="Gender" label="性别" width sortable></el-table-column>
@@ -46,7 +49,6 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
       <el-pagination
         layout="prev, pager, next"
         @current-change="nextPageStudents"
@@ -75,10 +77,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" prop="clazzid">
-          <el-select v-model="addForm.clazzid" placeholder="请选择">
+        <el-form-item label="班级" prop="classid">
+          <el-select v-model="addForm.classid" placeholder="请选择">
             <el-option
-              v-for="item in ClazzTree"
+              v-for="item in ClassTree"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -92,11 +94,11 @@
         <el-form-item label="姓名" prop="Name">
           <el-input v-model="addForm.Name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科一" prop="SubjectA">
-          <el-input v-model="addForm.SubjectA" auto-complete="off"></el-input>
+        <el-form-item label="专业方向" prop="ProDirection">
+          <el-input v-model="addForm.ProDirection" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科二" prop="SubjectB">
-          <el-input v-model="addForm.SubjectB" auto-complete="off"></el-input>
+        <el-form-item label="绩点" prop="CGPA">
+          <el-input v-model="addForm.CGPA" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="在校情况" prop="InSchoolSituation">
           <el-input v-model="addForm.InSchoolSituation" auto-complete="off"></el-input>
@@ -141,10 +143,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" prop="clazzid">
-          <el-select v-model="editForm.clazzid" placeholder="请选择">
+        <el-form-item label="班级" prop="classid">
+          <el-select v-model="editForm.classid" placeholder="请选择">
             <el-option
-              v-for="item in ClazzTree"
+              v-for="item in ClassTree"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -158,11 +160,11 @@
         <el-form-item label="姓名" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科一" prop="SubjectA">
-          <el-input v-model="editForm.SubjectA" auto-complete="off"></el-input>
+        <el-form-item label="专业方向" prop="ProDirection">
+          <el-input v-model="editForm.ProDirection" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="学科二" prop="SubjectB">
-          <el-input v-model="editForm.SubjectB" auto-complete="off"></el-input>
+        <el-form-item label="绩点" prop="CGPA">
+          <el-input v-model="editForm.CGPA" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="在校情况" prop="InSchoolSituation">
           <el-input v-model="editForm.InSchoolSituation" auto-complete="off"></el-input>
@@ -199,7 +201,7 @@ import {
   removeStudents,
   editStudents,
   getGradeTree,
-  getClazzTree
+  getClassTree
 } from "../../api/api";
 
 export default {
@@ -210,7 +212,7 @@ export default {
       },
       Students: [],
       GradeTree: [],
-      ClazzTree: [],
+      ClassTree: [],
       total: 0,
       page: 1,
       listLoading: false,
@@ -220,11 +222,11 @@ export default {
       editFormRules: {
         StudentNo: [{ required: true, message: "请输入学号", trigger: "blur" }],
         Name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        SubjectA: [
-          { required: true, message: "请输入学科一", trigger: "blur" }
+        ProDirection: [
+          { required: true, message: "请输入专业方向", trigger: "blur" }
         ],
-        SubjectB: [
-          { required: true, message: "请输入学科二", trigger: "blur" }
+        CGPA: [
+          { required: true, message: "请输入绩点", trigger: "blur" }
         ],
         InSchoolSituation: [
           { required: true, message: "请输入在校情况", trigger: "blur" }
@@ -239,13 +241,13 @@ export default {
         Id: 0,
         StudentNo: "",
         Name: "",
-        SubjectA: "",
-        SubjectB: "",
+        ProDirection: "",
+        CGPA: "",
         IsIndicators: "",
         Gender: "",
         InSchoolSituation: "",
         GradeId: 0,
-        ClazzId: 0,
+        ClassId: 0,
         EnrollmentYear:""
       },
       addFormVisible: false, //编辑界面是否显示
@@ -253,11 +255,11 @@ export default {
       addFormRules: {
         StudentNo: [{ required: true, message: "请输入学号", trigger: "blur" }],
         Name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        SubjectA: [
-          { required: true, message: "请输入学科一", trigger: "blur" }
+        ProDirection: [
+          { required: true, message: "请输入专业方向", trigger: "blur" }
         ],
-        SubjectB: [
-          { required: true, message: "请输入学科二", trigger: "blur" }
+        CGPA: [
+          { required: true, message: "请输入绩点", trigger: "blur" }
         ],
         InSchoolSituation: [
           { required: true, message: "请输入在校情况", trigger: "blur" }
@@ -272,13 +274,13 @@ export default {
         Id: 0,
         StudentNo: "",
         Name: "",
-        SubjectA: "",
-        SubjectB: "",
+        ProDirection: "",
+        CGPA: "",
         IsIndicators: "",
         Gender: "",
         InSchoolSituation: "",
         GradeId: 0,
-        ClazzId: 0,
+        ClassId: 0,
         EnrollmentYear:""
       }
     };
@@ -349,10 +351,10 @@ export default {
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
 
-      this.ClazzTree = [];
+      this.ClassTree = [];
       let para = { gid: row.gradeid };
-      getClazzTree(para).then(res => {
-        this.ClazzTree = res.data.response;
+      getClassTree(para).then(res => {
+        this.ClassTree = res.data.response;
       });
     },
     //编辑
@@ -394,14 +396,15 @@ export default {
     addStudents() {
       this.addFormVisible = true;
       this.addForm = {};
-      this.ClazzTree = [];
+      this.ClassTree = [];
     },
     getClazzTreeFunc() {
       var gid = this.editForm.gradeid>0?this.editForm.gradeid:this.addForm.gradeid;
 
       let para = { gid: gid };
-      getClazzTree(para).then(res => {
-        this.ClazzTree = res.data.response;
+      getClassTree(para).then(res => {
+        console.log(res);
+        this.ClassTree = res.data.response;
       });
     },
     //新增

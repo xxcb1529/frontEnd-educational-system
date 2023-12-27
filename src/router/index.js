@@ -24,11 +24,11 @@ const createRouter = () => new Router({
         {
             path: '/',
             component: Welcome,
-            name: '欢迎页',
+            name: '首页',
             iconCls: 'fa-qq',//图标样式class
             // hidden: true,
             meta: {
-                title: '欢迎页',
+                title: '首页',
                 requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
             }
         },
