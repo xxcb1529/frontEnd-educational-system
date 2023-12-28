@@ -103,8 +103,7 @@ router.beforeEach((to, from, next) => {
                global.antRouter = getRouter
                // routerGo(to, next)//执行路由跳转方法
            }
-            next()
-
+        //    next()
         }
     }
 });
