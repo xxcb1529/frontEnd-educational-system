@@ -215,7 +215,7 @@
                         let userinfo = JSON.parse(window.localStorage.user ? window.localStorage.user : null);
                         _this.$notify({
                             type: "success",
-                            message: `登录成功 \n 欢迎管理员：${userinfo.uRealName} ！Token 将在 ${window.localStorage.expires_in / 60} 分钟后过期！`,
+                            message: `登录成功 \n 欢迎管理员：${userinfo.uRealName} ！Token 将在 ${window.localStorage.expires_in / 60 / 60} 小时后过期！`,
                             duration: 6000
                         });
 
