@@ -24,6 +24,7 @@ const createRouter = () => new Router({
         {
             path: '/',
             component: Welcome,
+            redirect:'/Index/Welcome',
             name: '首页',
             iconCls: 'fa-qq',//图标样式class
             // hidden: true,
