@@ -27,26 +27,27 @@
       style="width: 100%; margin-bottom: 20px"
       row-key="Id"
       border
+      :default-sort="{prop: 'OrderSort', order: 'ascending'}"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
-      <el-table-column label="菜单/按钮" width="180" sortable>
+      <el-table-column label="菜单/按钮" width="180">
         <template slot-scope="scope">
           <i class="fa" :class="scope.row.Icon"></i>
           {{ scope.row.Name }}
         </template>
       </el-table-column>
-      <el-table-column prop="PnameArr" label="父节点" width="" sortable>
+      <el-table-column prop="PnameArr" label="父节点" width="180">
       </el-table-column>
-      <el-table-column prop="Code" label="路由地址" width="110" sortable>
+      <el-table-column prop="Code" label="路由地址" width="180">
       </el-table-column>
-      <el-table-column prop="MName" label="API接口" width="" sortable>
+      <el-table-column prop="MName" label="API接口" width="">
       </el-table-column>
       <el-table-column
         prop="CreateTime"
         label="创建时间"
         :formatter="formatCreateTime"
-        width="100"
+        width="120"
         sortable
       >
       </el-table-column>
@@ -61,7 +62,7 @@
       </el-table-column>
       <el-table-column prop="OrderSort" label="Sort" width="80" sortable>
       </el-table-column>
-      <el-table-column prop="IsButton" label="是否按钮" width="100" sortable>
+      <el-table-column prop="IsButton" label="是否按钮" width="120" sortable>
         <template slot-scope="scope">
           <el-tag
             :type="!scope.row.IsButton ? 'success' : 'danger'"
@@ -70,7 +71,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="IsAuth" label="是否权限" width="100" sortable>
+      <el-table-column prop="IsAuth" label="是否权限" width="120" sortable>
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.IsAuth ? 'success' : 'danger'"
@@ -79,7 +80,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="IsHide" label="是否隐藏" width="100" sortable>
+      <el-table-column prop="IsHide" label="是否隐藏" width="120" sortable>
         <template slot-scope="scope">
           <el-tag
             :type="!scope.row.IsHide ? 'success' : 'danger'"
@@ -88,7 +89,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="150" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
@@ -510,7 +511,6 @@ export default {
             let para = Object.assign({}, this.editForm);
 
             para.ModifyTime = util.formatDate.format(new Date(), "yyyy-MM-dd");
-
             para.Pid = para.PidArr.pop();
 
             if (para.Id == para.Pid) {
