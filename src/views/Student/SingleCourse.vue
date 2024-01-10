@@ -102,7 +102,7 @@ import {
   getExamTreeYearTerm,
   getExamTreeExam,
   getCourseTree,
-  getClazzTree
+  getClassTree
 } from "../../api/api";
 
 export default {

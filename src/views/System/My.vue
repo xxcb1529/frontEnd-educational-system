@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { getUserByToken} from '../../api/api'
 	export default {
 		data() {
 			return {
@@ -54,6 +55,9 @@
 		mounted(){
             var user = JSON.parse(window.localStorage.user);
             this.editForm.uRealName=user ? user.uRealName:""
+			getUserByToken({token:this.$store.state.token}).then(res=>{
+				console.log(res);
+			})
         }
 	}
 

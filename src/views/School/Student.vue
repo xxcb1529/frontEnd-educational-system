@@ -29,7 +29,7 @@
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column type="index" width="80"></el-table-column>
       <el-table-column prop="grade.Name" label="年级" width sortable></el-table-column>
-      <el-table-column prop="clazz.Name" label="班级" width sortable></el-table-column>
+      <el-table-column prop="Class.Name" label="班级" width sortable></el-table-column>
       <el-table-column prop="StudentNo" label="学号" width sortable></el-table-column>
       <el-table-column prop="Name" label="姓名" width sortable></el-table-column>
       <el-table-column prop="ProDirection" label="专业方向" width sortable></el-table-column>

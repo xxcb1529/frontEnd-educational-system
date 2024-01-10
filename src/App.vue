@@ -3,28 +3,18 @@
     <transition v-if="!$route.meta.NoNeedHome" name="fade" mode="out-in">
       <el-row class="container">
         <el-col :span="24" class="header">
-          <el-col
-            :span="10"
-            style="background-color: #001529; text-align: center"
-            class="logo collapsedLogo"
-            :class="collapsed ? 'logo-collapse-width' : 'logo-width'"
-          >
+          <el-col :span="10" style="background-color: #001529; text-align: center" class="logo collapsedLogo"
+            :class="collapsed ? 'logo-collapse-width' : 'logo-width'">
             <!-- <img src="./assets/JWLogo.png" alt=""> -->
             <div @click="toindex">{{ collapsed ? sysNameShort : sysName }}</div>
           </el-col>
           <el-col :span="10" class="logoban">
-            <div
-              :class="collapsed ? 'tools collapsed' : 'tools'"
-              @click="collapse"
-            >
+            <div :class="collapsed ? 'tools collapsed' : 'tools'" @click="collapse">
               <i class="fa fa-align-justify"></i>
             </div>
 
             <el-breadcrumb separator="/" class="breadcrumb-inner collapsedLogo">
-              <el-breadcrumb-item
-                v-for="item in $route.matched"
-                :key="item.path"
-              >
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
                 <span style=""> {{ item.name }}</span>
               </el-breadcrumb-item>
             </el-breadcrumb>
@@ -41,69 +31,35 @@
                     我的消息
                   </el-badge>
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="Setting"
-                  >设置</el-dropdown-item
-                >
-                <el-dropdown-item divided @click.native="logout"
-                  >退出登录</el-dropdown-item
-                >
+                <el-dropdown-item @click.native="Setting">设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-col>
         </el-col>
         <el-col :span="24" class="main">
           <aside :class="collapsedClass" style="height: 100%">
-            <el-scrollbar style="height: 100%; background: #001529">
-              <el-menu
-                :default-active="$route.path"
-                class="el-menu-vertical-demo"
-                @open="handleopen"
-                @close="handleclose"
-                @select="handleselect"
-                unique-opened
-                router
-                :collapse="isCollapse"
-                background-color="#001529"
-                text-color="#fff"
-                active-text-color="#ffd04b"
-              >
-                <sidebar
-                  v-for="(menu, index) in routes"
-                  @collaFa="collapseFa"
-                  :key="index"
-                  :item="menu"
-                />
-              </el-menu>
-            </el-scrollbar>
+            <!-- <el-scrollbar style="height: 100%; background: #001529"> -->
+            <el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose"
+              @select="handleselect" unique-opened router :collapse="isCollapse" background-color="#001529"
+              text-color="#fff" active-text-color="#ffd04b">
+              <sidebar v-for="(menu, index) in routes" @collaFa="collapseFa" :key="index" :item="menu" />
+            </el-menu>
+            <!-- </el-scrollbar> -->
           </aside>
 
-          <el-col
-            :span="24"
-            class="content-wrapper"
-            :class="collapsed ? 'content-collapsed' : 'content-expanded'"
-          >
+          <el-col :span="24" class="content-wrapper" :class="collapsed ? 'content-collapsed' : 'content-expanded'">
             <div class="tags" v-if="showTags">
               <div id="tags-view-container" class="tags-view-container">
                 <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-                  <router-link
-                    v-for="(tag, index) in tagsList"
-                    ref="tag"
-                    :key="tag.path"
-                    :class="{ active: isActive(tag.path) }"
-                    :to="{
+                  <router-link v-for="(tag, index) in tagsList" ref="tag" :key="tag.path"
+                    :class="{ active: isActive(tag.path) }" :to="{
                       path: tag.path,
                       query: tag.query,
                       fullPath: tag.fullPath,
-                    }"
-                    tag="span"
-                    @click.middle.native="closeTags(index)"
-                    class="tags-view-item"
-                  >
+                    }" tag="span" @click.middle.native="closeTags(index)" class="tags-view-item">
                     {{ tag.title }}
-                    <span
-                      class="el-icon-close"
-                      @click.prevent.stop="closeTags(index)"
-                    />
+                    <span class="el-icon-close" @click.prevent.stop="closeTags(index)" />
                   </router-link>
                 </scroll-pane>
               </div>
@@ -125,9 +81,7 @@
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
                   <el-dropdown-menu size="small" slot="dropdown">
-                    <el-dropdown-item command="other"
-                      >关闭其他</el-dropdown-item
-                    >
+                    <el-dropdown-item command="other">关闭其他</el-dropdown-item>
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
@@ -149,54 +103,31 @@
       </div>
     </transition>
 
-    <el-dialog
-      title="Unread Messages"
-      :class="newsDialogCss"
-      :visible.sync="NewsVisible"
-      v-model="NewsVisible"
-      :close-on-click-modal="false"
-    >
+    <el-dialog title="Unread Messages" :class="newsDialogCss" :visible.sync="NewsVisible" v-model="NewsVisible"
+      :close-on-click-modal="false">
       <div>
-        <el-tag
-          v-for="tag in tagNews"
-          :key="tag.name"
-          closable
-          class="tag-new"
-          :type="tag.type"
-        >
+        <el-tag v-for="tag in tagNews" :key="tag.name" closable class="tag-new" :type="tag.type">
           {{ tag.name }}
         </el-tag>
       </div>
     </el-dialog>
 
-    <div
-      class="v-modal"
-      @click="closeZModalShadow"
-      v-show="NewsVisible"
-      tabindex="0"
-      style="z-index: 2917"
-    ></div>
+    <div class="v-modal" @click="closeZModalShadow" v-show="NewsVisible" tabindex="0" style="z-index: 2917"></div>
 
-    <div
-      class="v-modal"
-      @click="collapse"
-      v-show="SidebarVisible"
-      tabindex="0"
-      style="z-index: 2917"
-    ></div>
+    <div class="v-modal" @click="collapse" v-show="SidebarVisible" tabindex="0" style="z-index: 2917"></div>
   </div>
 </template>
 <script>
 import Sidebar from "./components/Sidebar";
 import ScrollPane from "./components/ScrollPane";
-import { getUserByToken } from "./api/api";
+import { getUserByToken, editUser } from "./api/api";
 
 export default {
   components: { Sidebar, ScrollPane },
   data() {
     return {
       sysName: "教务系统",
-      sysNameShort: "SAS",
+      sysNameShort: "EAS",
       NewsVisible: false,
       SidebarVisible: false,
       collapsed: false,
@@ -268,7 +199,7 @@ export default {
     handleclose() {
       //console.log('handleclose');
     },
-    handleselect: function (a, b) {},
+    handleselect: function (a, b) { },
     //退出登录
     logout: function () {
       var _this = this;
@@ -276,23 +207,47 @@ export default {
         //type: 'warning'
       })
         .then(() => {
-          window.localStorage.removeItem("user");
-          window.localStorage.removeItem("Token");
-          window.localStorage.removeItem("TokenExpire");
-          window.localStorage.removeItem("NavigationBar");
-          window.localStorage.removeItem("refreshtime");
-          window.localStorage.removeItem("router");
-          sessionStorage.removeItem("Tags");
+          let userInfo = JSON.parse(window.localStorage.getItem("user"))
+          userInfo.logout = true
+          if (userInfo.RID === 1) {
+            editUser(userInfo).then((res) => {
+              if (res.data.success) {
+                window.localStorage.removeItem("user");
+                window.localStorage.removeItem("Token");
+                window.localStorage.removeItem("TokenExpire");
+                window.localStorage.removeItem("NavigationBar");
+                window.localStorage.removeItem("refreshtime");
+                window.localStorage.removeItem("router");
+                sessionStorage.removeItem("Tags");
 
-          global.antRouter = [];
+                global.antRouter = [];
 
-          this.tagsList = [];
-          this.routes = [];
-          this.$store.commit("saveTagsData", "");
-          _this.$router.push("/login");
-          window.location.reload();
+                this.tagsList = [];
+                this.routes = [];
+                this.$store.commit("saveTagsData", "");
+                _this.$router.push("/login");
+                window.location.reload();
+              }
+            })
+          } else {
+            window.localStorage.removeItem("user");
+            window.localStorage.removeItem("Token");
+            window.localStorage.removeItem("TokenExpire");
+            window.localStorage.removeItem("NavigationBar");
+            window.localStorage.removeItem("refreshtime");
+            window.localStorage.removeItem("router");
+            sessionStorage.removeItem("Tags");
+
+            global.antRouter = [];
+
+            this.tagsList = [];
+            this.routes = [];
+            this.$store.commit("saveTagsData", "");
+            _this.$router.push("/login");
+            window.location.reload();
+          }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     //设置
     Setting: function () {
@@ -532,8 +487,11 @@ export default {
   position: relative;
   overflow: hidden;
   border: 1px solid #f0f0f0;
-  margin-bottom: 20px;
-  background: #f0f0f0;
+  /* margin-bottom: 20px; */
+  padding: 10px 0;
+  /* background: #f0f0f0; */
+  box-shadow: 0px 2px 5px #e4e0e0;
+
 }
 
 .tags ul {
@@ -704,8 +662,7 @@ export default {
     width: 300px !important;
   }
 
-  .count-test label {
-  }
+  .count-test label {}
 
   .content-wrapper .tags {
     margin: 0px;
@@ -755,7 +712,7 @@ export default {
 
 .tags-view-container .tags-view-wrapper .tags-view-item.active::before {
   content: "";
-  background: #2d8cf0;
+  background: rgb(255, 208, 75);
   display: inline-block;
   width: 10px;
   height: 10px;

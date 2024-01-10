@@ -234,7 +234,7 @@
                 };
                 this.listLoading = true;
 
-                testapi();
+                // testapi();
                 //NProgress.start();
                 getUserListPage(para).then((res) => {
 

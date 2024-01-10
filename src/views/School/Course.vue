@@ -12,6 +12,9 @@
                 <el-form-item>
                     <el-button type="primary" @click="addCourse">新增</el-button>
                 </el-form-item>
+                <el-form-item>
+                    <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+                </el-form-item>
             </el-form>
         </el-col>
 
@@ -35,7 +38,6 @@
 
         <!--工具条-->
         <el-col :span="24" class="toolbar">
-            <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
             <el-pagination layout="prev, pager, next" @current-change="nextPageCourse" :page-size="50"
                            :total="total" style="float:right;">
             </el-pagination>

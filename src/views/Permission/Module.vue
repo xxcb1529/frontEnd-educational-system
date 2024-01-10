@@ -235,6 +235,9 @@ export default {
         LinkUrl: [
           { required: true, message: "请输入接口地址", trigger: "blur" },
         ],
+        ParentId: [
+          { required: true, message: "请选择父级", trigger: "blur" },
+        ],
       },
       //编辑界面数据
       editForm: {
@@ -251,6 +254,9 @@ export default {
       addFormRules: {
         LinkUrl: [
           { required: true, message: "请输入接口地址", trigger: "blur" },
+        ],
+        ParentId: [
+          { required: true, message: "请选择父级", trigger: "blur" },
         ],
       },
       //新增界面数据

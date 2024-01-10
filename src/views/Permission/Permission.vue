@@ -37,9 +37,9 @@
           {{ scope.row.Name }}
         </template>
       </el-table-column>
-      <el-table-column prop="PnameArr" label="父节点" width="180">
+      <el-table-column prop="PnameArr" label="父节点" width="250">
       </el-table-column>
-      <el-table-column prop="Code" label="路由地址" width="180">
+      <el-table-column prop="Code" label="路由地址" width="150">
       </el-table-column>
       <el-table-column prop="MName" label="API接口" width="">
       </el-table-column>

@@ -1,16 +1,27 @@
 <template>
   <section>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <el-col :span="24" class="toolbar" style="padding-bottom: 0px">
       <el-form :inline="true" :model="filters" @submit.native.prevent>
         <el-form-item>
-          <el-input v-model="filters.name" placeholder="输入查询内容"></el-input>
+          <el-input
+            v-model="filters.name"
+            placeholder="输入查询内容"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getTeacher">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addTeacher">新增</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="danger"
+            @click="batchRemove"
+            :disabled="this.sels.length === 0"
+            >批量删除</el-button
+          >
         </el-form-item>
       </el-form>
     </el-col>
@@ -21,17 +32,32 @@
       highlight-current-row
       v-loading="listLoading"
       @selection-change="selsChange"
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column type="index" width="80"></el-table-column>
-      <el-table-column prop="TeacherNo" label="教师编号" width sortable></el-table-column>
-      <el-table-column prop="Name" label="教师" width sortable></el-table-column>
-      <el-table-column prop="Account" label="登录账号" width sortable></el-table-column>
-      <el-table-column label="授课情况" width="240" sortable>
+      <el-table-column
+        prop="TeacherNo"
+        label="教师编号"
+        width
+        sortable
+      ></el-table-column>
+      <el-table-column
+        prop="Name"
+        label="教师"
+        width
+        sortable
+      ></el-table-column>
+      <el-table-column
+        prop="Account"
+        label="登录账号"
+        width
+        sortable
+      ></el-table-column>
+      <el-table-column label="带班情况" width="240" sortable>
         <template scope="scope">
           <span v-for="item in scope.row.cct">
-            {{item.grade.Name+item.clazz.Name+"班"+item.course.Name}}
+            {{ item.grade.Name + item.clazz.Name }}
             &nbsp;&nbsp;|&nbsp;
           </span>
         </template>
@@ -39,24 +65,29 @@
 
       <el-table-column label="操作" width="150">
         <template scope="scope">
-          <el-button size="small" @click="editTeacher(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="deleteTeacher(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" @click="editTeacher(scope.$index, scope.row)"
+            >编辑</el-button
+          >
+          <el-button
+            type="danger"
+            size="small"
+            @click="deleteTeacher(scope.$index, scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
       <el-pagination
         layout="prev, pager, next"
         @current-change="nextPageTeacher"
         :page-size="50"
         :total="total"
-        style="float:right;"
+        style="float: right"
       ></el-pagination>
     </el-col>
-
 
     <!--新增界面-->
     <el-dialog
@@ -65,7 +96,12 @@
       v-model="addFormVisible"
       :close-on-click-modal="false"
     >
-      <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form
+        :model="addForm"
+        label-width="80px"
+        :rules="addFormRules"
+        ref="addForm"
+      >
         <el-form-item label="教师编号" prop="TeacherNo">
           <el-input v-model="addForm.TeacherNo" auto-complete="off"></el-input>
         </el-form-item>
@@ -77,7 +113,11 @@
         </el-form-item>
 
         <el-form-item label="年级" prop="gradeId">
-          <el-select @change="getClazzTreeFunc"   v-model="addForm.gradeId" placeholder="请选择">
+          <el-select
+            @change="getClazzTreeFunc"
+            v-model="addForm.gradeId"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in GradeTree"
               :key="item.value"
@@ -98,8 +138,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="科目" prop="courseId">
-          <el-select v-model="addForm.courseId" placeholder="请选择">
+        <el-form-item label="科目" prop="courseIds">
+          <el-select v-model="addForm.courseIds" multiple placeholder="请选择">
             <el-option
               v-for="item in CourseTree"
               :key="item.value"
@@ -111,10 +151,14 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="addSubmit"
+          :loading="addLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
-
 
     <!--编辑界面-->
     <el-dialog
@@ -123,7 +167,12 @@
       v-model="editFormVisible"
       :close-on-click-modal="false"
     >
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form
+        :model="editForm"
+        label-width="80px"
+        :rules="editFormRules"
+        ref="editForm"
+      >
         <el-form-item label="教师编号" prop="TeacherNo">
           <el-input v-model="editForm.TeacherNo" auto-complete="off"></el-input>
         </el-form-item>
@@ -135,7 +184,11 @@
         </el-form-item>
 
         <el-form-item label="年级" prop="gradeId">
-          <el-select @change="getClazzTreeFunc"   v-model="editForm.gradeId" placeholder="请选择">
+          <el-select
+            @change="getClazzTreeFunc"
+            v-model="editForm.gradeId"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in GradeTree"
               :key="item.value"
@@ -145,19 +198,20 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" prop="clazzIds">
-          <el-select v-model="editForm.clazzIds" multiple placeholder="请选择">
+        <el-form-item label="班级" prop="Class_ids">
+          <el-select v-model="editForm.Class_ids" multiple placeholder="请选择">
             <el-option
               v-for="item in ClazzTree"
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            ></el-option>
+            >
+            </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="科目" prop="courseId">
-          <el-select v-model="editForm.courseId" placeholder="请选择">
+        <el-form-item label="科目" prop="courseIds">
+          <el-select v-model="editForm.courseIds" multiple placeholder="请选择">
             <el-option
               v-for="item in CourseTree"
               :key="item.value"
@@ -169,7 +223,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button
+          type="primary"
+          @click.native="editSubmit"
+          :loading="editLoading"
+          >提交</el-button
+        >
       </div>
     </el-dialog>
   </section>
@@ -182,21 +241,21 @@ import {
   getTeacherListPage,
   getGradeTree,
   removeTeacher,
-  getClazzTree,
+  getClassTree,
   getCourseTree,
-  editTeacher
+  editTeacher,
 } from "../../api/api";
 
 export default {
   data() {
     return {
       filters: {
-        name: ""
+        name: "",
       },
       Teacher: [],
-      GradeTree:[],
-      ClazzTree:[],
-      CourseTree:[],
+      GradeTree: [],
+      ClazzTree: [],
+      CourseTree: [],
       total: 0,
       page: 1,
       listLoading: false,
@@ -205,10 +264,10 @@ export default {
       editLoading: false,
       editFormRules: {
         TeacherNo: [
-          { required: true, message: "请输入教师编号", trigger: "blur" }
+          { required: true, message: "请输入教师编号", trigger: "blur" },
         ],
         Name: [{ required: true, message: "请输入教师", trigger: "blur" }],
-        Account: [{ required: true, message: "请输入账号", trigger: "blur" }]
+        Account: [{ required: true, message: "请输入账号", trigger: "blur" }],
       },
       //编辑界面数据
       editForm: {
@@ -216,37 +275,37 @@ export default {
         TeacherNo: "",
         Name: "",
         Account: "",
-        courseId: 0,
-        clazzIds: [],
-        gradeId: 0
+        courseIds: [],
+        Class_ids: [],
+        gradeId: 0,
       },
       addFormVisible: false, //编辑界面是否显示
       addLoading: false,
       addFormRules: {
         TeacherNo: [
-          { required: true, message: "请输入教师编号", trigger: "blur" }
+          { required: true, message: "请输入教师编号", trigger: "blur" },
         ],
         Name: [{ required: true, message: "请输入教师", trigger: "blur" }],
-        Account: [{ required: true, message: "请输入账号", trigger: "blur" }]
+        Account: [{ required: true, message: "请输入账号", trigger: "blur" }],
       },
-      //编辑界面数据
+      //新增界面数据
       addForm: {
         id: 0,
         TeacherNo: "",
         Name: "",
         Account: "",
-        courseId: 0,
+        courseIds: [],
         clazzIds: [],
-        gradeId: 0
-      }
+        gradeId: 0,
+      },
     };
   },
   methods: {
     //性别显示转换
-    formatSex: function(row, column) {
+    formatSex: function (row, column) {
       return row.sex == 1 ? "男" : row.sex == 0 ? "女" : "未知";
     },
-    formatBirth: function(row, column) {
+    formatBirth: function (row, column) {
       return !row.birth || row.birth == ""
         ? ""
         : util.formatDate.format(new Date(row.birth), "yyyy-MM-dd");
@@ -259,26 +318,30 @@ export default {
     getTeacher() {
       let para = {
         page: this.page,
-        key: this.filters.name
+        key: this.filters.name,
       };
       this.listLoading = true;
 
-      getTeacherListPage(para).then(res => {
+      getTeacherListPage(para).then((res) => {
         this.total = res.data.response.dataCount;
+        for (let i in res.data.response.data) {
+          res.data.response.data[i].Class_ids =
+            res.data.response.data[i].Class_ids.split(",").map(Number);
+        }
         this.Teacher = res.data.response.data;
         this.listLoading = false;
       });
     },
     //删除
-    deleteTeacher: function(index, row) {
+    deleteTeacher: function (index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
           let para = { id: row.Id };
-          removeTeacher(para).then(res => {
+          removeTeacher(para).then((res) => {
             if (util.isEmt.format(res)) {
               this.listLoading = false;
               return;
@@ -288,42 +351,45 @@ export default {
             if (res.data.success) {
               this.$message({
                 message: "删除成功",
-                type: "success"
+                type: "success",
               });
             } else {
               this.$message({
                 message: res.data.msg,
-                type: "error"
+                type: "error",
               });
             }
-
             this.getTeacher();
           });
         })
         .catch(() => {});
     },
     //显示编辑界面
-    editTeacher: function(index, row) {
+    editTeacher: function (index, row) {
       this.editFormVisible = true;
+      if(row.Class_ids === '' || row.Class_ids.length === 1 && row.Class_ids[0] === 0){
+        row.Class_ids = []
+      }
+      if(row.courseIds === '' || row.courseId.length === 1 && row.courseId[0] === 0){
+        row.courseIds = []
+      }
       this.editForm = Object.assign({}, row);
-
-      
-      this.ClazzTree = [];
+      console.log(row);
       let para = { gid: row.gradeId };
-      getClazzTree(para).then(res => {
-        this.ClazzTree = res.data.response;
+      getClassTree(para).then((res) => {
+          this.ClazzTree = res.data.response
       });
     },
     //编辑
-    editSubmit: function() {
-      this.$refs.editForm.validate(valid => {
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.editForm);
-
-            editTeacher(para).then(res => {
+            para.Class_ids = para.Class_ids.toString();
+            editTeacher(para).then((res) => {
               if (util.isEmt.format(res)) {
                 this.editLoading = false;
                 return;
@@ -333,7 +399,7 @@ export default {
                 //NProgress.done();
                 this.$message({
                   message: res.data.msg,
-                  type: "success"
+                  type: "success",
                 });
                 this.$refs["editForm"].resetFields();
                 this.editFormVisible = false;
@@ -341,7 +407,7 @@ export default {
               } else {
                 this.$message({
                   message: res.data.msg,
-                  type: "error"
+                  type: "error",
                 });
               }
             });
@@ -353,20 +419,19 @@ export default {
     addTeacher() {
       this.addFormVisible = true;
       this.addForm = {};
-
-      this.ClazzTree = [];
-
+      getClassTree().then((res) => {
+        this.ClazzTree = res.data.response;
+      });
     },
     //新增
-    addSubmit: function() {
-        
-      this.$refs.addForm.validate(valid => {
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             let para = Object.assign({}, this.addForm);
-            
-            addTeacher(para).then(res => {
+
+            addTeacher(para).then((res) => {
               if (util.isEmt.format(res)) {
                 this.addLoading = false;
                 return;
@@ -377,7 +442,7 @@ export default {
                 //NProgress.done();
                 this.$message({
                   message: res.data.msg,
-                  type: "success"
+                  type: "success",
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
@@ -385,7 +450,7 @@ export default {
               } else {
                 this.$message({
                   message: res.data.msg,
-                  type: "error"
+                  type: "error",
                 });
               }
             });
@@ -393,28 +458,28 @@ export default {
         }
       });
     },
-    selsChange: function(sels) {
+    selsChange: function (sels) {
       this.sels = sels;
     },
     //批量删除
-    batchRemove: function() {
+    batchRemove: function () {
       // return;
 
-      var ids = this.sels.map(item => item.Id).toString();
+      var ids = this.sels.map((item) => item.Id).toString();
       this.$confirm("确认删除选中记录吗？", "提示", {
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
 
-          batchRemoveTeacher(para).then(res => {
+          batchRemoveTeacher(para).then((res) => {
             this.listLoading = false;
             //NProgress.done();
             this.$message({
               message: "该功能未开放",
-              type: "warning"
+              type: "warning",
             });
             console.log(res);
           });
@@ -422,11 +487,13 @@ export default {
         .catch(() => {});
     },
     getClazzTreeFunc() {
-      
-      var gid = this.editForm.gradeId>0?this.editForm.gradeId:this.addForm.gradeId;
+      var gid =
+        this.editForm.gradeId > 0
+          ? this.editForm.gradeId
+          : this.addForm.gradeId;
 
       let para = { gid: gid };
-      getClazzTree(para).then(res => {
+      getClassTree(para).then((res) => {
         this.ClazzTree = res.data.response;
       });
     },
@@ -434,13 +501,12 @@ export default {
   mounted() {
     this.getTeacher();
     let para = {};
-    getGradeTree(para).then(res => {
+    getGradeTree(para).then((res) => {
       this.GradeTree = res.data.response;
     });
-    getCourseTree(para).then(res => {
+    getCourseTree(para).then((res) => {
       this.CourseTree = res.data.response;
     });
-  }
+  },
 };
 </script>
-

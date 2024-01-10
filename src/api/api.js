@@ -142,13 +142,8 @@ export const getUserByToken = params => {
     return axios.get(`${base}/api/user/getInfoByToken`, {params: params}).then(res => res.data);
 };
 
-
-export function testapi2() {
-    console.log('api is ok.')
-}
-
-export const testapi = pa => {
-    console.log('api is ok.')
+export const getSystemInfo = ()=>{
+    return axios.get(`${base}/api/HomeData/GetSystemInfo`)
 }
 
 // 用户管理
@@ -316,7 +311,7 @@ export const addStudents = params => {
     return axios.post(`${base}/api/Students/post`, params);
 };
 export const getStudentsListPage = params => {
-    return axios.get(`${base}/api/Students/get`, {params: params});
+    return axios.get(`${base}/api/Students/Get`, {params: params});
 };
 export const removeStudents = params => {
     return axios.delete(`${base}/api/Students/delete`, {params: params});

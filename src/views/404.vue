@@ -3,7 +3,7 @@
         <p class="page-container">没有找到你要的页面<br>你是不是迷路了?
 
 
-            <router-link to="/">点击返回首页 </router-link>
+            <router-link to="/login">点击返回登录 </router-link>
         </p>
     </div>
 </template>
