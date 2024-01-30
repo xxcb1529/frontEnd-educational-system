@@ -38,39 +38,36 @@
         </el-tab-pane>
       </el-tabs>
     </el-col>
-    <el-row :gutter="20">
-      <el-col :span="8">
-        <div class="grid-content bg-purple" style="margin: 20px 20px 0 0;">
-          <!-- 首页user信息 -->
-          <el-card shadow="hover">
-            <div class="userCard">
-              <el-avatar :size="150" :src="imgUrl"></el-avatar>
-              <div class="userInfo">
-                <p class="important-font">{{ userInfo.uRealName }}</p>
-                <p class="secondary-font">{{ userInfo.RoleName }}</p>
-              </div>
+    <el-col :span="8">
+      <div class="grid-content bg-purple" style="margin: 20px 20px 0 0;">
+        <!-- 首页user信息 -->
+        <el-card shadow="hover">
+          <div class="userCard">
+            <el-avatar :size="150" :src="imgUrl"></el-avatar>
+            <div class="userInfo">
+              <p class="important-font">{{ userInfo.uRealName }}</p>
+              <p class="secondary-font">{{ userInfo.RoleName }}</p>
             </div>
-            <div class="login-info">
-              <p>上次登录时间：{{ userInfo.uLastErrTime }}</p>
-            </div>
-          </el-card>
-          <!-- 首页表格 -->
-          <el-card shadow="hover" class="tableInfo">
-            <div slot="header">
-              <span class="important-font">系统信息</span>
-            </div>
-            <div>
-              <el-table :data="tableData" stripe border height="375px" style="width: 100%">
-                <el-table-column prop="name" label="名称" width="180">
-                </el-table-column>
-                <el-table-column prop="description" label="描述"> </el-table-column>
-              </el-table>
-            </div>
-          </el-card>
-        </div>
-      </el-col>
-
-    </el-row>
+          </div>
+          <div class="login-info">
+            <p>上次登录时间：{{ userInfo.uLastErrTime }}</p>
+          </div>
+        </el-card>
+        <!-- 首页表格 -->
+        <el-card shadow="hover" class="tableInfo">
+          <div slot="header">
+            <span class="important-font">系统信息</span>
+          </div>
+          <div>
+            <el-table :data="tableData" stripe border height="375px" style="width: 100%">
+              <el-table-column prop="name" label="名称" width="180">
+              </el-table-column>
+              <el-table-column prop="description" label="描述"> </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </div>
+    </el-col>
   </div>
 </template>
 
@@ -252,6 +249,8 @@ export default {
 .body {
   background-color: #f2f3f6;
   margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .userCard {
@@ -287,7 +286,6 @@ export default {
 
 .OrderCard {
   margin: 20px 0 0px 30px;
-  border: #dcdfe6 1px solid;
   font-size: 14px;
   width: 30%;
 
