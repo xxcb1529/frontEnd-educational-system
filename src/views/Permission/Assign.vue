@@ -18,14 +18,14 @@
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>菜单</span>
-                    <!-- <el-button :loading="loadingSave" @click="saveAssign" style="float: right; padding: 3px 0" type="text">{{loadingSaveStr}}</el-button> -->
+                    <el-button :loading="loadingSave" @click="saveAssign" style="float: right; padding: 3px 0" type="text">{{loadingSaveStr}}</el-button>
                 </div>
                 <div class="block">
-                    <!--<el-tree :data="data5" size="mini" show-checkbox node-key="value" :props="defaultProps"-->
-                             <!--style="width: 100%;pading-top:20px;" default-expand-all ref="menuTree" :render-content="renderContent"-->
-                              <!--element-loading-text="拼命加载中" :check-strictly="true"-->
-                             <!--@check-change="handleMenuCheckChange">-->
-                    <!--</el-tree>-->
+                    <!-- <el-tree :data="data5" size="mini" show-checkbox node-key="value" :props="defaultProps"
+                             style="width: 100%;pading-top:20px;" default-expand-all ref="menuTree" :render-content="renderContent"
+                              element-loading-text="拼命加载中" :check-strictly="true"
+                             @check-change="handleMenuCheckChange">
+                    </el-tree> -->
 
 
                     <el-tree

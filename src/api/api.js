@@ -146,6 +146,27 @@ export const getSystemInfo = ()=>{
     return axios.get(`${base}/api/HomeData/GetSystemInfo`)
 }
 
+// 任务管理
+export const GetMyTasksByTeamIds = params =>{
+    return axios.get(`${base}/api/Task/GetMyTasksByTeamIds`, {params: params})
+}
+
+export const GetTasksByTeamIds = params =>{
+    return axios.get(`${base}/api/Task/GetTasksByTeamIds`, {params: params})
+}
+
+export const GetTasks = params =>{
+    return axios.get(`${base}/api/Task/Get`, {params: params})
+}
+
+export const GetJoinTeams = params =>{
+    return axios.get(`${base}/api/Task/GetJoinTeams`, {params: params})
+}
+
+export const AddTask = params =>{
+    return axios.post(`${base}/api/Task/Post`, params)
+}
+
 // 用户管理
 export const getUserListPage = params => {
     return axios.get(`${base}/api/user/get`, {params: params});
@@ -175,6 +196,10 @@ export const editRole = params => {
 };
 export const addRole = params => {
     return axios.post(`${base}/api/role/post`, params);
+};
+
+export const getAllRoles = params => {
+    return axios.get(`${base}/api/role/GetAllRoles`, params);
 };
 
 // 接口模块管理

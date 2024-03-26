@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <el-col :span="16">
-      <!-- 六个订单信息 -->
+      <!-- 六个信息 -->
       <div class="num">
         <el-card shadow="hover" v-for="item in countData" :key="item.name" :body-style="{ display: 'flex', padding: 0 }"
           class="OrderCard">
@@ -24,13 +24,13 @@
       </div>
       <el-tabs v-model="activeName" style="background-color: white;margin: 20px 20px 20px 30px;padding: 10px 10px;"
         type="card">
-        <el-tab-pane label="用户管理" name="first">
+        <el-tab-pane label="任务数据" name="first">
           <!-- 柱状图 -->
           <div style="height: 360px;width: 1100px;" ref="barEcharts">
             {{ initBarEcharts() }}
           </div>
         </el-tab-pane>
-        <el-tab-pane label="近期访问" name="second">
+        <el-tab-pane label="团队数据" name="second">
           <!-- 折线图 -->
           <div style="height: 360px; width: 1100px;" ref="lineEcharts">
             {{ initLineEcharts() }}
@@ -85,13 +85,13 @@ export default {
       tableData: [],
       countData: [
         {
-          title: "年级数量",
-          subtitle: "总年级数量",
+          title: "任务数量",
+          subtitle: "总任务数量",
           value: 1200,
           icon: "success",
           color: "#2ec7c9",
           allData: 1,
-          unit: '月'
+          unit: '周'
         },
         {
           title: "教师数量",
@@ -130,13 +130,13 @@ export default {
           unit: '学期'
         },
         {
-          title: "专业数量",
-          subtitle: "总专业数量",
+          title: "团队数量",
+          subtitle: "总团队数量",
           value: 1200,
           icon: "star-on",
           color: "#ffb980",
           allData: 1,
-          unit: '年'
+          unit: '周'
         },
         // {
         //   title: "带班数量",
@@ -164,22 +164,17 @@ export default {
         let option = {
           tooltip: {},
           legend: {
-            data: ["今日销量", "昨日销量"],
+            data: ["近一周"],
           },
           xAxis: {
-            data: ["华为", "vivo", "oppo", "ipone", "小米", "三星"],
+            data: ["周一", "周二", "周三", "周四", "周五", "周六","周日"],
           },
           yAxis: {},
           series: [
             {
-              name: "今日销量",
+              name: "近一周",
               type: "bar",
-              data: [5, 20, 36, 10, 10, 20],
-            },
-            {
-              name: "昨日销量",
-              type: "bar",
-              data: [10, 18, 34, 8, 12, 21],
+              data: [5, 20, 36, 10, 10, 20,6,8],
             },
           ],
         };
@@ -198,21 +193,21 @@ export default {
         let option = {
           tooltip: {},
           legend: {
-            data: ["订单信息"],
+            data: ["近一周"],
           },
           xAxis: {
             type: "category",
             boundaryGap: false,  // 如果你希望 x 轴的数据点贴近坐标轴两边，可以设置为 false
-            data: ["成交订单量", "退款订单量", "浏览量", "加购量", "预购量"],
+            data: ["周一", "周二", "周三", "周四", "周五", "周六","周日"],
           },
           yAxis: {
             type: "value",
           },
           series: [
             {
-              name: "订单信息",
+              name: "近一周",
               type: "line",  // 修改为 "line"
-              data: [1048, 735, 580, 484, 300],
+              data: [5, 20, 36, 10, 10, 20,6,8],
               smooth: true
             },
           ],

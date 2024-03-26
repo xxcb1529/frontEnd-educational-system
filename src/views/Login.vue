@@ -59,14 +59,14 @@
           {{ loginStr }}
         </el-button>
       </el-form-item>
-      <el-form-item style="width: 100%">
+      <!-- <el-form-item style="width: 100%">
         <el-button
           :loading="loginingMock"
           style="width: 100%"
           @click.native.prevent="handleSubmitMock"
           >学生免账号登录
         </el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
 
     <div class="subtitle">Copyright © 2023 12 Graduation Project For Lennon Xu</div>
@@ -122,7 +122,7 @@ export default {
         this.ruleForm2.account = "Admin001";
         this.ruleForm2.checkPass = "123456";
       } else if (this.account3 == "教师") {
-        this.ruleForm2.account = "G2999";
+        this.ruleForm2.account = "J0001";
         this.ruleForm2.checkPass = "G2999";
       } else {
         this.ruleForm2.account = "blogadmin";
@@ -152,17 +152,13 @@ export default {
         if (valid) {
           //_this.$router.replace('/table');
           this.logining = true;
-
           //NProgress.start();
           var loginParams = {
             name: this.ruleForm2.account,
             pass: this.ruleForm2.checkPass,
           };
-
           // _this.openAlert("登录中...")
-
           _this.loginStr = "登录中...";
-
           requestLogin(loginParams).then((data) => {
             if (!data.success) {
               _this.$message({
@@ -271,7 +267,7 @@ export default {
           let getRouter = data.response.children; //后台拿到路由
           getRouter = filterAsyncRouter(getRouter); //过滤路由
           router.addRoutes(getRouter); //动态添加路由
-
+          console.log(_this.$route.query.redirect);
           _this.$router.replace(
             _this.$route.query.redirect ? _this.$route.query.redirect : "/"
           );

@@ -154,7 +154,7 @@ export default {
         { name: "前后端分离", type: "" },
         { name: "vue.js", type: "" },
         { name: "DDD领域驱动设计", type: "success" },
-        { name: "NetCore 3.1", type: "info" },
+        { name: ".net6", type: "info" },
         { name: "Element UI", type: "warning" },
         { name: "Mysql", type: "danger" },
       ],

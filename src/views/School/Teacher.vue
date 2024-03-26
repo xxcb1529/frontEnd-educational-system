@@ -38,7 +38,7 @@
       <el-table-column type="index" width="80"></el-table-column>
       <el-table-column
         prop="TeacherNo"
-        label="教师编号"
+        label="工号"
         width
         sortable
       ></el-table-column>
@@ -48,12 +48,17 @@
         width
         sortable
       ></el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="Account"
         label="登录账号"
         width
         sortable
-      ></el-table-column>
+      ></el-table-column> -->
+      <el-table-column prop="role_id" label="角色" :formatter="checkTeacherRole" sortable>
+        <template slot-scope="scope">
+            {{ checkTeacherRole(scope.row) }}
+        </template>
+      </el-table-column>
       <el-table-column label="带班情况" width="240" sortable>
         <template scope="scope">
           <span v-for="item in scope.row.cct">
@@ -102,15 +107,15 @@
         :rules="addFormRules"
         ref="addForm"
       >
-        <el-form-item label="教师编号" prop="TeacherNo">
+        <el-form-item label="工号" prop="TeacherNo">
           <el-input v-model="addForm.TeacherNo" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="教师" prop="Name">
           <el-input v-model="addForm.Name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号" prop="Account">
+        <!-- <el-form-item label="账号" prop="Account">
           <el-input v-model="addForm.Account" auto-complete="off"></el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="年级" prop="gradeId">
           <el-select
@@ -127,8 +132,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" prop="clazzIds">
-          <el-select v-model="addForm.clazzIds" multiple placeholder="请选择">
+        <el-form-item label="班级" prop="Class_ids">
+          <el-select v-model="addForm.Class_ids" multiple placeholder="请选择">
             <el-option
               v-for="item in ClazzTree"
               :key="item.value"
@@ -142,6 +147,16 @@
           <el-select v-model="addForm.courseIds" multiple placeholder="请选择">
             <el-option
               v-for="item in CourseTree"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="角色" prop="roleId">
+          <el-select v-model="addForm.role_id" auto-complete="off" placeholder="请选择">
+            <el-option
+              v-for="item in allRoles"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -173,15 +188,15 @@
         :rules="editFormRules"
         ref="editForm"
       >
-        <el-form-item label="教师编号" prop="TeacherNo">
+        <el-form-item label="工号" prop="TeacherNo">
           <el-input v-model="editForm.TeacherNo" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="教师" prop="Name">
           <el-input v-model="editForm.Name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号" prop="Account">
+        <!-- <el-form-item label="账号" prop="Account">
           <el-input v-model="editForm.Account" auto-complete="off"></el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="年级" prop="gradeId">
           <el-select
@@ -220,6 +235,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="角色" prop="roleId">
+          <el-select v-model="editForm.role_id" auto-complete="off" placeholder="请选择">
+            <el-option
+              v-for="item in allRoles"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -244,6 +269,7 @@ import {
   getClassTree,
   getCourseTree,
   editTeacher,
+  getAllRoles
 } from "../../api/api";
 
 export default {
@@ -267,17 +293,18 @@ export default {
           { required: true, message: "请输入教师编号", trigger: "blur" },
         ],
         Name: [{ required: true, message: "请输入教师", trigger: "blur" }],
-        Account: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        role_id: [{ required: true, message: "请选择角色", trigger: "blur" }],
       },
       //编辑界面数据
       editForm: {
         id: 0,
         TeacherNo: "",
         Name: "",
-        Account: "",
+        // Account: "",
         courseIds: [],
         Class_ids: [],
         gradeId: 0,
+        role_id:0
       },
       addFormVisible: false, //编辑界面是否显示
       addLoading: false,
@@ -286,21 +313,34 @@ export default {
           { required: true, message: "请输入教师编号", trigger: "blur" },
         ],
         Name: [{ required: true, message: "请输入教师", trigger: "blur" }],
-        Account: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        role_id: [{ required: true, message: "请选择角色", trigger: "blur" }],
       },
       //新增界面数据
       addForm: {
         id: 0,
         TeacherNo: "",
         Name: "",
-        Account: "",
+        // Account: "",
         courseIds: [],
-        clazzIds: [],
+        Class_ids: [],
         gradeId: 0,
+        role_id:0
       },
+      allRoles:[]
     };
   },
   methods: {
+    checkTeacherRole: function (row) {
+      var statusDict = {
+        0: "未知",
+        1: "管理员",
+        2: "教师",
+        3: "教务员",
+        4: "负责人",
+      };
+
+      return statusDict[row.role_id] || "未知";
+    },
     //性别显示转换
     formatSex: function (row, column) {
       return row.sex == 1 ? "男" : row.sex == 0 ? "女" : "未知";
@@ -370,7 +410,7 @@ export default {
       if(row.Class_ids === '' || row.Class_ids.length === 1 && row.Class_ids[0] === 0){
         row.Class_ids = []
       }
-      if(row.courseIds === '' || row.courseId.length === 1 && row.courseId[0] === 0){
+      if(row.courseIds === '' || row.courseId && row.courseId.length === 1 && row.courseId[0] === 0){
         row.courseIds = []
       }
       this.editForm = Object.assign({}, row);
@@ -388,7 +428,8 @@ export default {
             this.editLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.editForm);
-            para.Class_ids = para.Class_ids.toString();
+            para.Class_ids = para.Class_ids.join(',');
+            para.courseIds = para.courseIds.join(',');
             editTeacher(para).then((res) => {
               if (util.isEmt.format(res)) {
                 this.editLoading = false;
@@ -430,7 +471,8 @@ export default {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             let para = Object.assign({}, this.addForm);
-
+            para.Class_ids = para.Class_ids.join(',');
+            para.courseIds = para.courseIds.join(',');
             addTeacher(para).then((res) => {
               if (util.isEmt.format(res)) {
                 this.addLoading = false;
@@ -497,6 +539,7 @@ export default {
         this.ClazzTree = res.data.response;
       });
     },
+    
   },
   mounted() {
     this.getTeacher();
@@ -507,6 +550,11 @@ export default {
     getCourseTree(para).then((res) => {
       this.CourseTree = res.data.response;
     });
+    getAllRoles().then(res=>{
+      this.allRoles = res.data.response
+      console.log(res);
+    })
+    
   },
 };
 </script>
