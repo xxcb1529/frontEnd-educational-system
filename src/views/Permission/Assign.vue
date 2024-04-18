@@ -364,6 +364,10 @@
 
     .box-card {
         width: 90%;
+        .el-card__body, .el-main{
+            overflow-x: auto;
+
+        }
     }
 
     .el-checkbox+.el-checkbox{

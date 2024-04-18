@@ -46,7 +46,7 @@
       <div style="margin-bottom: 20px" class="count-test">
         <el-radio-group @change="loginAccount" v-model="account3">
           <el-radio-button label="管理员"></el-radio-button>
-          <el-radio-button label="教师"></el-radio-button>
+          <el-radio-button label="教职工"></el-radio-button>
         </el-radio-group>
       </div>
       <el-form-item style="width: 100%">
@@ -121,7 +121,7 @@ export default {
       if (this.account3 == "管理员") {
         this.ruleForm2.account = "Admin001";
         this.ruleForm2.checkPass = "123456";
-      } else if (this.account3 == "教师") {
+      } else if (this.account3 == "教职工") {
         this.ruleForm2.account = "J0001";
         this.ruleForm2.checkPass = "G2999";
       } else {

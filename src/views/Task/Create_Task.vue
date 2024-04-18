@@ -14,13 +14,21 @@
                     </el-form-item>
                     <el-form-item label="优先级" prop="priority">
                         <el-select v-model="createForm.priority" clearable placeholder="请选择">
-                            <el-option v-for="item in prioritys" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in prioritys" :key="item.value" :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="审批员" prop="approver_id">
+                        <el-select v-model="createForm.approver_id" clearable placeholder="请选择">
+                            <el-option v-for="item in allTeachers" :key="item.value" :label="item.label"
+                                :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="开始时间" prop="start_time">
-                        <el-date-picker v-model="createForm.start_time" type="datetime" placeholder="选择开始日期时间" align="right"
-                            :picker-options="pickerOptions1">
+                        <el-date-picker v-model="createForm.start_time" type="datetime" placeholder="选择开始日期时间"
+                            align="right" :picker-options="pickerOptions1">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="结束时间" prop="end_time">
@@ -50,12 +58,12 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
-            <el-tab-pane label="参与团队">参与团队</el-tab-pane>
+            <el-tab-pane label="个人">个人</el-tab-pane>
         </el-tabs>
     </div>
 </template>
 <script>
-import { GetJoinTeams,AddTask} from "../../api/api";
+import { GetJoinTeams, AddTask, GetAllTeachers } from "../../api/api";
 
 export default {
     data() {
@@ -67,10 +75,11 @@ export default {
                 start_time: '',
                 end_time: '',
                 remark: '无',
-                description: '无'
+                description: '无',
+                approver_id: 0
             },
             addLoading: false,
-            prioritys:[{
+            prioritys: [{
                 value: 'S',
                 label: 'S级'
             }, {
@@ -135,7 +144,7 @@ export default {
                         date.setTime(date.getTime() + 3600 * 1000 * 24);
                         picker.$emit('pick', date);
                     }
-                }, 
+                },
                 {
                     text: '一周后',
                     onClick(picker) {
@@ -160,7 +169,7 @@ export default {
                         picker.$emit('pick', date);
                     }
                 }
-            ]
+                ]
             },
             createFormRules: {
                 name: [
@@ -168,6 +177,9 @@ export default {
                 ],
                 assign_team_ids: [
                     { required: true, message: '请至少选择一个派发团队', trigger: 'change' }
+                ],
+                approver_id: [
+                    { required: true, message: '请选择审批人', trigger: 'change' }
                 ],
                 start_time: [
                     { type: 'date', required: true, message: '请选择开始时间', trigger: 'change' }
@@ -178,7 +190,13 @@ export default {
                 priority: [
                     { required: true, message: '请选择任务的优先级', trigger: 'change' }
                 ]
-            }
+            },
+            allTeachers: [
+                {
+                    label: "请选择",
+                    value: 0
+                }
+            ]
         }
     },
     methods: {
@@ -187,18 +205,18 @@ export default {
                 if (valid) {
                     this.$confirm("确认提交吗？", "提示", {}).then(() => {
                         this.addLoading = true;
-                        let para = Object.assign({}, this.createForm); 
+                        let para = Object.assign({}, this.createForm);
                         para.assign_team_ids = para.assign_team_ids.join(',');
                         console.log(para);
-                        AddTask(para).then(res=>{
+                        AddTask(para).then(res => {
                             console.log(res);
                             this.addLoading = false
-                            if(res.data.success){
+                            if (res.data.success) {
                                 this.$message({
                                     message: "添加成功",
                                     type: "success",
                                 });
-                            }else {
+                            } else {
                                 this.$message({
                                     message: res.data.msg,
                                     type: "error",
@@ -215,20 +233,23 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        getFormInfo(){
+        getFormInfo() {
             let userInfo = JSON.parse(window.localStorage.getItem('user'))
             let para = {
-                ids:userInfo.team_ids,
-                tid:userInfo.uID
+                ids: userInfo.team_ids,
+                tid: userInfo.uID
             }
-            GetJoinTeams(para).then(res=>{
+            GetJoinTeams(para).then(res => {
                 this.teams = res.data.response
                 console.log(res);
             })
         }
     },
-    mounted(){
+    mounted() {
         this.getFormInfo()
+        GetAllTeachers().then(res => {
+            this.allTeachers = res.data.response
+        })
     }
 }
 </script>

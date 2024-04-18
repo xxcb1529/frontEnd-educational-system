@@ -145,7 +145,7 @@
                 this.page = val;
                 this.getGrade();
             },
-            //获取用户列表
+            //获取列表
             getGrade() {
                 let para = {
                     page: this.page,

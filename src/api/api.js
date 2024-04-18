@@ -5,7 +5,7 @@ import store from "../store";
 import Vue from 'vue';
 
 // 如果是iis部署的话，这么写，因为要使用后端api的绝对路径
-//let base = process.env.NODE_ENV=="production"? 'http://localhost:6919':'';
+// let base = process.env.NODE_ENV=="production"? 'http://68575e88.r18.cpolar.top':'';
 // 如果是nginx的话，就置空就行了，因为用的是代理模式
 let base = '';
 
@@ -40,7 +40,7 @@ axios.interceptors.response.use(
     error => {
         // 超时请求处理
         var originalRequest = error.config;
-        if(error.code == 'ECONNABORTED' && error.message.indexOf('timeout')!=-1 && !originalRequest._retry){
+        if (error.code == 'ECONNABORTED' && error.message.indexOf('timeout') != -1 && !originalRequest._retry) {
 
             Vue.prototype.$message({
                 message: '请求超时！',
@@ -57,7 +57,7 @@ axios.interceptors.response.use(
                 var refreshtime = new Date(Date.parse(window.localStorage.refreshtime))
                 // 在用户操作的活跃期内
                 if (window.localStorage.refreshtime && (curTime <= refreshtime)) {
-                    return  refreshToken({token: window.localStorage.Token}).then((res) => {
+                    return refreshToken({ token: window.localStorage.Token }).then((res) => {
                         if (res.success) {
                             Vue.prototype.$message({
                                 message: 'refreshToken success! loading data...',
@@ -82,7 +82,6 @@ axios.interceptors.response.use(
                     // 返回 401，并且不知用户操作活跃期内 清除token信息并跳转到登录页面
                     ToLogin()
                 }
-
             }
             // 403 无权限
             if (error.response.status == 403) {
@@ -99,12 +98,12 @@ axios.interceptors.response.use(
 
 // 登录
 export const requestLogin = params => {
-    return axios.get(`${base}/api/login/jwttoken3.0`, {params: params}).then(res => res.data);
+    return axios.get(`${base}/api/login/jwttoken3.0`, { params: params }).then(res => res.data);
 };
 export const requestLoginMock = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
 export const refreshToken = params => {
-    return axios.get(`${base}/api/login/RefreshToken`, {params: params}).then(res => res.data);
+    return axios.get(`${base}/api/login/RefreshToken`, { params: params }).then(res => res.data);
 };
 
 export const saveRefreshtime = params => {
@@ -113,66 +112,151 @@ export const saveRefreshtime = params => {
     let lastRefreshtime = window.localStorage.refreshtime ? new Date(window.localStorage.refreshtime) : new Date(-1);
     let expiretime = new Date(Date.parse(window.localStorage.TokenExpire))
 
-    let refreshCount=1;//滑动系数
+    let refreshCount = 1;//滑动系数
     if (lastRefreshtime >= nowtime) {
-        lastRefreshtime=nowtime>expiretime ? nowtime:expiretime;
+        lastRefreshtime = nowtime > expiretime ? nowtime : expiretime;
         lastRefreshtime.setMinutes(lastRefreshtime.getMinutes() + refreshCount);
         window.localStorage.refreshtime = lastRefreshtime;
-    }else {
+    } else {
         window.localStorage.refreshtime = new Date(-1);
     }
 };
- const ToLogin = params => {
-     store.commit("saveToken", "");
-     store.commit("saveTokenExpire", "");
-     store.commit("saveTagsData", "");
-     window.localStorage.removeItem('user');
-     window.localStorage.removeItem('NavigationBar');
+const ToLogin = params => {
+    store.commit("saveToken", "");
+    store.commit("saveTokenExpire", "");
+    store.commit("saveTagsData", "");
+    window.localStorage.removeItem('user');
+    window.localStorage.removeItem('NavigationBar');
 
-     router.replace({
-         path: "/login",
-         query: {redirect: router.currentRoute.fullPath}
-     });
+    router.replace({
+        path: "/login",
+        query: { redirect: router.currentRoute.fullPath }
+    });
 
-      window.location.reload()
+    window.location.reload()
 
+};
+
+export const testGetApi = (url,params) => {
+    return axios.get(`${base + url}`, { params: params }).then(res => res.data);
+};
+export const testPostApi = (url,params) => {
+    return axios.post(`${base + url}`,  params ).then(res => res.data);
 };
 
 export const getUserByToken = params => {
-    return axios.get(`${base}/api/user/getInfoByToken`, {params: params}).then(res => res.data);
+    return axios.get(`${base}/api/user/getInfoByToken`, { params: params }).then(res => res.data);
 };
 
-export const getSystemInfo = ()=>{
+export const getSystemInfo = () => {
     return axios.get(`${base}/api/HomeData/GetSystemInfo`)
 }
 
+// 文件管理
+export const ListFiles = params => {
+    return axios.get(`${base}/api/Files/ListFiles`, { params: params })
+}
+export const CreateFolder = params => {
+    return axios.post(`${base}/api/Files/CreateFolder`, params)
+}
+
+export const DeleteF = params => {
+    return axios.delete(`${base}/api/Files/Delete`, { data: params })
+}
+
+export const DownloadFile = params => {
+    return axios.get(`${base}/api/Files/DownloadFile`, { params: params })
+}
+
+export const UploadSingleFile = params => {
+    return axios.post(`${base}/api/Files/PostSingleFile`, params)
+}
+
+export const UploadMultipleFile = params => {
+    return axios.post(`${base}/api/Files/PostMultipleFile`, params)
+}
+
+// 团队管理
+export const GetTeams = params => {
+    return axios.get(`${base}/api/Team/Get`, { params: params })
+}
+
+export const AddTeam = params => {
+    return axios.post(`${base}/api/Team/Post`, params)
+}
+
+export const DelTeam = params => {
+    return axios.delete(`${base}/api/Team/Delete`, { params: params })
+}
+
+export const UpdateTeam = params => {
+    return axios.put(`${base}/api/Team/Put`, params)
+}
+
+export const GetTeamHeaderInfo = params => {
+    return axios.get(`${base}/api/Team/GetTeamHerderInfo`, { params: params })
+}
+
+export const GetAllTeams = params => {
+    return axios.get(`${base}/api/Team/GetAllTeams`, { params: params })
+}
+export const GetAllTeachers = params => {
+    return axios.get(`${base}/api/Team/GetAllTeachers`, { params: params })
+}
+export const GetSelectTeamTasksByTeamId = params => {
+    return axios.get(`${base}/api/Team/GetSelectTeamTasksByTeamId`, { params: params })
+}
+export const GetTeamSubordinateTeam = params => {
+    return axios.get(`${base}/api/Team/GetTeamSubordinateTeam`, { params: params })
+}
 // 任务管理
-export const GetMyTasksByTeamIds = params =>{
-    return axios.get(`${base}/api/Task/GetMyTasksByTeamIds`, {params: params})
+export const GetMyTasksByTeamIds = params => {
+    return axios.get(`${base}/api/Task/GetMyTasksByTeamIds`, { params: params })
 }
 
-export const GetTasksByTeamIds = params =>{
-    return axios.get(`${base}/api/Task/GetTasksByTeamIds`, {params: params})
+export const GetTasksByTeamIds = params => {
+    return axios.get(`${base}/api/Task/GetTasksByTeamIds`, { params: params })
 }
 
-export const GetTasks = params =>{
-    return axios.get(`${base}/api/Task/Get`, {params: params})
+export const GetTasks = params => {
+    return axios.get(`${base}/api/Task/Get`, { params: params })
 }
 
-export const GetJoinTeams = params =>{
-    return axios.get(`${base}/api/Task/GetJoinTeams`, {params: params})
+export const GetJoinTeams = params => {
+    return axios.get(`${base}/api/Task/GetJoinTeams`, { params: params })
 }
 
-export const AddTask = params =>{
+export const AddTask = params => {
     return axios.post(`${base}/api/Task/Post`, params)
 }
 
+export const DelTask = params => {
+    return axios.delete(`${base}/api/Task/Delete`, { params: params })
+}
+
+export const UpdateTask = params => {
+    return axios.put(`${base}/api/Task/Put`, params)
+}
+
+export const getTeamTasksByTeamId = params => {
+    return axios.get(`${base}/api/Task/GetTeamTasksByTeamId`, { params: params })
+}
+
+export const GetApprovalTasks = params => {
+    return axios.get(`${base}/api/Task/GetApprovalTasks`, { params: params })
+}
+
+export const ApprovalTask = params => {
+    return axios.put(`${base}/api/Task/ApprovalTask`, params)
+}
+
+
 // 用户管理
 export const getUserListPage = params => {
-    return axios.get(`${base}/api/user/get`, {params: params});
+    return axios.get(`${base}/api/user/get`, { params: params });
 };
 export const removeUser = params => {
-    return axios.delete(`${base}/api/user/delete`, {params: params});
+    return axios.delete(`${base}/api/user/delete`, { params: params });
 };
 export const editUser = params => {
     return axios.put(`${base}/api/user/put`, params);
@@ -181,15 +265,15 @@ export const addUser = params => {
     return axios.post(`${base}/api/user/post`, params);
 };
 export const batchRemoveUser = params => {
-    return axios.delete(`${base}/api/Claims/BatchDelete`, {params: params});//没做
+    return axios.delete(`${base}/api/Claims/BatchDelete`, { params: params });//没做
 };
 
 // 角色管理
 export const getRoleListPage = params => {
-    return axios.get(`${base}/api/role/get`, {params: params});
+    return axios.get(`${base}/api/role/get`, { params: params });
 };
 export const removeRole = params => {
-    return axios.delete(`${base}/api/role/delete`, {params: params});
+    return axios.delete(`${base}/api/role/delete`, { params: params });
 };
 export const editRole = params => {
     return axios.put(`${base}/api/role/put`, params);
@@ -204,13 +288,13 @@ export const getAllRoles = params => {
 
 // 接口模块管理
 export const getModuleListPage = params => {
-    return axios.get(`${base}/api/module/get`, {params: params});
+    return axios.get(`${base}/api/module/get`, { params: params });
 };
 export const getTableTreeModuleListPage = params => {
-    return axios.get(`${base}/api/Module/GetAllParents`, {params: params});
+    return axios.get(`${base}/api/Module/GetAllParents`, { params: params });
 };
 export const removeModule = params => {
-    return axios.delete(`${base}/api/module/delete`, {params: params});
+    return axios.delete(`${base}/api/module/delete`, { params: params });
 };
 export const editModule = params => {
     return axios.put(`${base}/api/module/put`, params);
@@ -220,16 +304,16 @@ export const addModule = params => {
 };
 
 // 父级接口
-export const getMParent = params =>{
-    return  axios.get(`${base}/api/MParent/Get`, params);
+export const getMParent = params => {
+    return axios.get(`${base}/api/MParent/Get`, params);
 }
 
 // 菜单模块管理
 export const getPermissionListPage = params => {
-    return axios.get(`${base}/api/permission/get`, {params: params});
+    return axios.get(`${base}/api/permission/get`, { params: params });
 };
 export const removePermission = params => {
-    return axios.delete(`${base}/api/permission/delete`, {params: params});
+    return axios.delete(`${base}/api/permission/delete`, { params: params });
 };
 export const editPermission = params => {
     return axios.put(`${base}/api/permission/put`, params);
@@ -238,17 +322,17 @@ export const addPermission = params => {
     return axios.post(`${base}/api/permission/post`, params);
 };
 export const getPermissionTree = params => {
-    return axios.get(`${base}/api/permission/getpermissiontree`, {params: params});
+    return axios.get(`${base}/api/permission/getpermissiontree`, { params: params });
 };
 export const getPermissionIds = params => {
-    return axios.get(`${base}/api/permission/GetPermissionIdByRoleId`, {params: params});
+    return axios.get(`${base}/api/permission/GetPermissionIdByRoleId`, { params: params });
 };
 
 export const addRolePermission = params => {
     return axios.post(`${base}/api/permission/Assign`, params);
 };
 export const getNavigationBar = params => {
-    return axios.get(`${base}/api/permission/GetNavigationBar`, {params: params}).then(res => res.data);
+    return axios.get(`${base}/api/permission/GetNavigationBar`, { params: params }).then(res => res.data);
 };
 
 export const GetPermissonTree = () => {
@@ -257,10 +341,10 @@ export const GetPermissonTree = () => {
 
 // Bug模块管理
 export const getBugListPage = params => {
-    return axios.get(`${base}/api/TopicDetail/get`, {params: params});
+    return axios.get(`${base}/api/TopicDetail/get`, { params: params });
 };
 export const removeBug = params => {
-    return axios.delete(`${base}/api/TopicDetail/delete`, {params: params});
+    return axios.delete(`${base}/api/TopicDetail/delete`, { params: params });
 };
 export const editBug = params => {
     return axios.put(`${base}/api/TopicDetail/update`, params);
@@ -275,103 +359,106 @@ export const addGrade = params => {
     return axios.post(`${base}/api/Grade/post`, params);
 };
 export const getGradeListPage = params => {
-    return axios.get(`${base}/api/Grade/get`, {params: params});
+    return axios.get(`${base}/api/Grade/get`, { params: params });
 };
 export const removeGrade = params => {
-    return axios.delete(`${base}/api/Grade/delete`, {params: params});
+    return axios.delete(`${base}/api/Grade/delete`, { params: params });
 };
 export const editGrade = params => {
     return axios.put(`${base}/api/Grade/put`, params);
 };
 export const getGradeTree = params => {
-    return axios.get(`${base}/api/Grade/GetGradeTree`, {params: params});
+    return axios.get(`${base}/api/Grade/GetGradeTree`, { params: params });
 };
 // Class
 export const addClazz = params => {
     return axios.post(`${base}/api/Class/post`, params);
 };
 export const getClazzListPage = params => {
-    return axios.get(`${base}/api/Class/get`, {params: params});
+    return axios.get(`${base}/api/Class/get`, { params: params });
 };
 export const removeClazz = params => {
-    return axios.delete(`${base}/api/Class/delete`, {params: params});
+    return axios.delete(`${base}/api/Class/delete`, { params: params });
 };
 export const editClazz = params => {
     return axios.put(`${base}/api/Class/put`, params);
 };
 export const getClassTree = params => {
-    return axios.get(`${base}/api/Class/GetClassTree`, {params: params});
+    return axios.get(`${base}/api/Class/GetClassTree`, { params: params });
 };
 // Course
 export const addCourse = params => {
     return axios.post(`${base}/api/Course/post`, params);
 };
 export const getCourseListPage = params => {
-    return axios.get(`${base}/api/Course/get`, {params: params});
+    return axios.get(`${base}/api/Course/get`, { params: params });
 };
 export const removeCourse = params => {
-    return axios.delete(`${base}/api/Course/delete`, {params: params});
+    return axios.delete(`${base}/api/Course/delete`, { params: params });
 };
 export const editCourse = params => {
     return axios.put(`${base}/api/Course/put`, params);
 };
 export const getCourseTree = params => {
-    return axios.get(`${base}/api/Course/GetCourseTree`, {params: params});
+    return axios.get(`${base}/api/Course/GetCourseTree`, { params: params });
 };
 // Teacher
 export const addTeacher = params => {
     return axios.post(`${base}/api/Teacher/post`, params);
 };
 export const getTeacherListPage = params => {
-    return axios.get(`${base}/api/Teacher/get`, {params: params});
+    return axios.get(`${base}/api/Teacher/get`, { params: params });
 };
 export const removeTeacher = params => {
-    return axios.delete(`${base}/api/Teacher/delete`, {params: params});
+    return axios.delete(`${base}/api/Teacher/delete`, { params: params });
 };
 export const editTeacher = params => {
     return axios.put(`${base}/api/Teacher/put`, params);
+};
+export const getTeamMembers = params => {
+    return axios.get(`${base}/api/Teacher/GetTeamMembers`,  { params: params });
 };
 // Students
 export const addStudents = params => {
     return axios.post(`${base}/api/Students/post`, params);
 };
 export const getStudentsListPage = params => {
-    return axios.get(`${base}/api/Students/Get`, {params: params});
+    return axios.get(`${base}/api/Students/Get`, { params: params });
 };
 export const removeStudents = params => {
-    return axios.delete(`${base}/api/Students/delete`, {params: params});
+    return axios.delete(`${base}/api/Students/delete`, { params: params });
 };
 export const editStudents = params => {
     return axios.put(`${base}/api/Students/put`, params);
 };
 export const getStudentsTree = params => {
-    return axios.get(`${base}/api/Students/GetStudentsTree`, {params: params});
+    return axios.get(`${base}/api/Students/GetStudentsTree`, { params: params });
 };
 // Exam
 export const addExam = params => {
     return axios.post(`${base}/api/Exam/post`, params);
 };
 export const getExamListPage = params => {
-    return axios.get(`${base}/api/Exam/get`, {params: params});
+    return axios.get(`${base}/api/Exam/get`, { params: params });
 };
 export const removeExam = params => {
-    return axios.delete(`${base}/api/Exam/delete`, {params: params});
+    return axios.delete(`${base}/api/Exam/delete`, { params: params });
 };
 export const editExam = params => {
     return axios.put(`${base}/api/Exam/put`, params);
 };
 export const getExamTree = params => {
-    return axios.get(`${base}/api/Exam/GetExamTree`, {params: params});
+    return axios.get(`${base}/api/Exam/GetExamTree`, { params: params });
 };
 // ExScore
 export const addExScore = params => {
     return axios.post(`${base}/api/ExScore/post`, params);
 };
 export const getExScoreListPage = params => {
-    return axios.get(`${base}/api/ExScore/get`, {params: params});
+    return axios.get(`${base}/api/ExScore/get`, { params: params });
 };
 export const removeExScore = params => {
-    return axios.delete(`${base}/api/ExScore/delete`, {params: params});
+    return axios.delete(`${base}/api/ExScore/delete`, { params: params });
 };
 export const editExScore = params => {
     return axios.put(`${base}/api/ExScore/put`, params);
@@ -382,10 +469,10 @@ export const addExamDetail = params => {
     return axios.post(`${base}/api/ExamDetail/post`, params);
 };
 export const getExamDetailListPage = params => {
-    return axios.get(`${base}/api/ExamDetail/get`, {params: params});
+    return axios.get(`${base}/api/ExamDetail/get`, { params: params });
 };
 export const removeExamDetail = params => {
-    return axios.delete(`${base}/api/ExamDetail/delete`, {params: params});
+    return axios.delete(`${base}/api/ExamDetail/delete`, { params: params });
 };
 export const editExamDetail = params => {
     return axios.put(`${base}/api/ExamDetail/put`, params);
@@ -395,38 +482,38 @@ export const addExamDetailScore = params => {
     return axios.post(`${base}/api/ExamDetailScore/post`, params);
 };
 export const getExamDetailScoreListPage = params => {
-    return axios.get(`${base}/api/ExamDetailScore/get`, {params: params});
+    return axios.get(`${base}/api/ExamDetailScore/get`, { params: params });
 };
 export const removeExamDetailScore = params => {
-    return axios.delete(`${base}/api/ExamDetailScore/delete`, {params: params});
+    return axios.delete(`${base}/api/ExamDetailScore/delete`, { params: params });
 };
 export const editExamDetailScore = params => {
     return axios.put(`${base}/api/ExamDetailScore/put`, params);
 };
 // CourseScoreDistribute
 export const getCourseScoreDistributeListPage = params => {
-    return axios.get(`${base}/api/CourseScoreDistribute/get`, {params: params});
+    return axios.get(`${base}/api/CourseScoreDistribute/get`, { params: params });
 };
 export const getExamTreeYearTerm = params => {
-    return axios.get(`${base}/api/Exam/GetExamTreeYearTerm`, {params: params});
+    return axios.get(`${base}/api/Exam/GetExamTreeYearTerm`, { params: params });
 };
 export const getExamTreeExam = params => {
-    return axios.get(`${base}/api/Exam/GetExamTreeExam`, {params: params});
+    return axios.get(`${base}/api/Exam/GetExamTreeExam`, { params: params });
 };
 export const getSingleCourseListPage = params => {
-    return axios.get(`${base}/api/SingleCourse/get`, {params: params});
+    return axios.get(`${base}/api/SingleCourse/get`, { params: params });
 };
 export const getObjective = params => {
-    return axios.get(`${base}/api/Objective/get`, {params: params});
+    return axios.get(`${base}/api/Objective/get`, { params: params });
 };
 export const getSubjective = params => {
-    return axios.get(`${base}/api/Subjective/get`, {params: params});
+    return axios.get(`${base}/api/Subjective/get`, { params: params });
 };
 export const getFSN = params => {
-    return axios.get(`${base}/api/FSN/get`, {params: params});
+    return axios.get(`${base}/api/FSN/get`, { params: params });
 };
 export const getPositivePointListPage = params => {
-    return axios.get(`${base}/api/PositivePoint/get`, {params: params});
+    return axios.get(`${base}/api/PositivePoint/get`, { params: params });
 };
 
 
@@ -436,11 +523,11 @@ export const getPositivePointListPage = params => {
 
 
 export const getSingleCourseStudentListPage = params => {
-    return axios.get(`${base}/api/SingleCourseStudent/get`, {params: params});
+    return axios.get(`${base}/api/SingleCourseStudent/get`, { params: params });
 };
 export const getFSNStudent = params => {
-    return axios.get(`${base}/api/FSNStudent/get`, {params: params});
+    return axios.get(`${base}/api/FSNStudent/get`, { params: params });
 };
 export const getObjectiveStudent = params => {
-    return axios.get(`${base}/api/ObjectiveStudent/get`, {params: params});
+    return axios.get(`${base}/api/ObjectiveStudent/get`, { params: params });
 };

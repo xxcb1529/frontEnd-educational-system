@@ -27,7 +27,12 @@
             </el-table-column>
             <el-table-column prop="Name" label="课程" width="" sortable>
             </el-table-column>
-           
+            <el-table-column prop="Code" label="课程代码" width="" sortable>
+            </el-table-column>
+            <el-table-column prop="Head_name" label="负责人" width="" sortable>
+            </el-table-column>
+            <el-table-column prop="Materials" label="参考教材" width="" sortable>
+            </el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
                     <el-button size="small" @click="editCourse(scope.$index, scope.row)">编辑</el-button>
@@ -49,7 +54,15 @@
                 <el-form-item label="课程" prop="Name">
                     <el-input v-model="addForm.Name" auto-complete="off"></el-input>
                 </el-form-item>
-               
+                <el-form-item label="课程代码" prop="Code">
+                    <el-input v-model="addForm.Code" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="课程负责人" prop="Head_id">
+                    <el-input v-model="addForm.Head_id" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="参考教材" prop="Materials">
+                    <el-input v-model="addForm.Materials" auto-complete="off"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -63,7 +76,15 @@
                 <el-form-item label="课程" prop="Name">
                     <el-input v-model="editForm.Name" auto-complete="off"></el-input>
                 </el-form-item>
-               
+                <el-form-item label="课程代码" prop="Code">
+                    <el-input v-model="addForm.Code" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="课程负责人" prop="Head_id">
+                    <el-input v-model="addForm.Head_id" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="参考教材" prop="Materials">
+                    <el-input v-model="addForm.Materials" auto-complete="off"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -93,9 +114,17 @@
                 editFormVisible: false,//编辑界面是否显示
                 editLoading: false,
                 editFormRules: {
-                  
                     Name: [
                         {required: true, message: '请输入课程', trigger: 'blur'}
+                    ],
+                    Code: [
+                        {required: true, message: '请输入课程代码', trigger: 'blur'}
+                    ],
+                    Head_id: [
+                        {required: true, message: '请选择负责人', trigger: 'blur'}
+                    ],
+                    Materials: [
+                        {required: true, message: '请输入参考教材', trigger: 'blur'}
                     ]
                 },
                 //编辑界面数据
@@ -103,6 +132,9 @@
                     id: 0,
                     Id: '',
                     Name: '',
+                    Code:'',
+                    Head_id:0,
+                    Materials:""
                 },
                 addFormVisible: false,//编辑界面是否显示
                 addLoading: false,
@@ -110,6 +142,15 @@
                   
                     Name: [
                         {required: true, message: '请输入课程', trigger: 'blur'}
+                    ],
+                    Code: [
+                        {required: true, message: '请输入课程代码', trigger: 'blur'}
+                    ],
+                    Head_id: [
+                        {required: true, message: '请选择负责人', trigger: 'blur'}
+                    ],
+                    Materials: [
+                        {required: true, message: '请输入参考教材', trigger: 'blur'}
                     ]
                 },
                 //编辑界面数据
@@ -117,6 +158,9 @@
                     id: 0,
                     Id: '',
                     Name: '',
+                    Code:'',
+                    Head_id:0,
+                    Materials:""
                 },
             }
         },
@@ -132,7 +176,7 @@
                 this.page = val;
                 this.getCourse();
             },
-            //获取用户列表
+            //获取列表
             getCourse() {
                 let para = {
                     page: this.page,

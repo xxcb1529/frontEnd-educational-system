@@ -46,7 +46,7 @@ module.exports = {
     proxy: {
       // 配置多个代理
       "/api": {
-        target: "http://localhost:691",//这里改成你自己的后端api端口地址，记得每次修改，都需要重新build
+        target: "http://68575e88.r18.cpolar.top",//这里改成你自己的后端api端口地址，记得每次修改，都需要重新build
         ws: true,
       }
     },

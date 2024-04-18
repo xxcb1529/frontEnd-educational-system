@@ -299,7 +299,7 @@ export default {
       this.page = val;
       this.getStudents();
     },
-    //获取用户列表
+    //获取学生列表
     getStudents() {
       let para = {
         page: this.page,

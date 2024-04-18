@@ -412,7 +412,7 @@ export default {
       this.page = val;
       this.getPermissions();
     },
-    //获取用户列表
+    //获取列表
     getPermissions() {
       let para = {
         page: this.page,
